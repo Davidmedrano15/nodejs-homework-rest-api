@@ -1,11 +1,30 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+const mongoose = require("mongoose");
+
+
 const contactsRouter = require("./routes/api/contacts");
+
 
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
+
+mongoose.connect("mongodb+srv://dbContacts:Miramira15@atlascluster.pdz5vd2.mongodb.net/", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+const db = mongoose.connection;
+
+db.on("error", (error) => {
+  console.error("Error de conexión a MongoDB:", error);
+});
+
+db.once("open", () => {
+  console.log("Conexión a MongoDB establecida correctamente");
+});
 
 app.use(logger(formatsLogger));
 app.use(cors());
